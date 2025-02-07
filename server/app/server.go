@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/charlesfan/hr-go/config"
+	"github.com/charlesfan/hr-go/repository/db/repo"
 )
 
 var server = newServer()
@@ -17,6 +18,10 @@ type Server struct {
 }
 
 func (s *Server) Run(c config.Config) error {
+	err := repo.Init(c)
+	if err != nil {
+		return err
+	}
 	s.router = NewRouter(net.JoinHostPort(c.Server.Host, c.Server.Port))
 	s.router.Config(c)
 	s.router.Run()
