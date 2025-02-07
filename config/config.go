@@ -56,12 +56,12 @@ func Init() {
 			AppSecret:  "FFPGR3tAh1WIT1cMYPxgIlnd6CbPlc0b",
 		},
 		Database: &Database{
-			Dialect:  "postgres",
+			Dialect:  "mysql",
 			Host:     "127.0.0.1",
-			Port:     "5432",
-			Database: "postgres",
-			User:     "postgres",
-			Password: "123456",
+			Port:     "3306",
+			Database: "hr_go",
+			User:     "root",
+			Password: "dev123",
 			Schema:   "user",
 		},
 	}
