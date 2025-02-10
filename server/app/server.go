@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/charlesfan/hr-go/config"
-	"github.com/charlesfan/hr-go/repository/db/repo"
+	"github.com/charlesfan/hr-go/repository/db/daos"
 )
 
 var server = newServer()
@@ -18,7 +18,7 @@ type Server struct {
 }
 
 func (s *Server) Run(c config.Config) error {
-	err := repo.Init(c)
+	err := daos.Init(c)
 	if err != nil {
 		return err
 	}
