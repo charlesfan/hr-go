@@ -47,10 +47,16 @@ func (s *dbRepoFactory) EmployeeRepo() employee.Repository {
 	return s.employeeRepository.repo.(employee.Repository)
 }
 
-func NewDBRepoFactory() DBRepoFactory {
+func NewDBRepoFactory(db *gorm.DB) DBRepoFactory {
 	once.Do(func() {
-		dbrepoFactory = &dbRepoFactory{
-			gormDB: dbEngine.GormDB(),
+		if db == nil {
+			dbrepoFactory = &dbRepoFactory{
+				gormDB: dbEngine.GormDB(),
+			}
+		} else {
+			dbrepoFactory = &dbRepoFactory{
+				gormDB: db,
+			}
 		}
 	})
 	return dbrepoFactory

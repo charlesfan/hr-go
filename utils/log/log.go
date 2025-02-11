@@ -68,11 +68,6 @@ func getBaseName(fileName string, funcName string) (string, string) {
 	return filepath.Base(fileName), filepath.Base(funcName)
 }
 
-// Println same as Debug
-func Println(args ...interface{}) {
-	Debug(args)
-}
-
 // Debug logs a message at level Debug on the standard logger.
 func Debug(args ...interface{}) {
 	if !rtLogConf.showFileInfo {
