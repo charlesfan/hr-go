@@ -9,6 +9,12 @@ import (
 	"github.com/charlesfan/hr-go/repository/db/models"
 )
 
+const (
+	NameColumn       = "name"
+	EmailColumn      = "email"
+	DepartmentColumn = "department"
+)
+
 type Employee struct {
 	ID             string `gorm:"column:id;unique;primary_key"`
 	Name           string `gorm:"column:name;not null"`

@@ -4,16 +4,20 @@ import (
 	"os"
 	"testing"
 
-	"github.com/charlesfan/hr-go/utils/tmpfile"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	"github.com/charlesfan/hr-go/config"
+	"github.com/charlesfan/hr-go/repository/db/dialects"
+	"github.com/charlesfan/hr-go/utils/tmpfile"
 )
 
 type Env struct {
 	T     *testing.T
 	B     *testing.B
 	DB    *gorm.DB
+	dbf   *os.File
 	fs    []*os.File
 	Debug bool
 }
@@ -58,8 +62,24 @@ func (e *Env) setupDB() error {
 	sqldb.SetMaxIdleConns(10)
 
 	e.DB = db
+	e.dbf = f
 
 	return nil
+}
+
+func (e *Env) DBConfig() config.Config {
+	c := config.Config{
+		Env: "development",
+	}
+
+	if e.dbf != nil {
+		c.Database = &config.Database{
+			Dialect: dialects.Sqlite.String(),
+			Host:    e.dbf.Name(),
+		}
+	}
+
+	return c
 }
 
 func (e *Env) runMigration() {

@@ -42,7 +42,7 @@ const (
 
 // 404 00
 const (
-	ErrorCodeUserNotFound = iota + 4040000
+	ErrorCodeNotFound = iota + 4040000
 )
 
 // 404 01
@@ -64,7 +64,7 @@ var errorMsg = map[int]string{
 	ErrorCodeTokenCreateFail:  "token create fail",
 	ErrorCodeForbidden:        "Forbidden",
 	ErrorCodeTokenExpired:     "token expired",
-	ErrorCodeUserNotFound:     "user is not exist",
+	ErrorCodeNotFound:         "user is not exist",
 	ErrorCodeDatabaseFail:     "database failure",
 	ErrorCodeDataGetFail:      "fail to get data",
 }
