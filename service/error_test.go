@@ -10,7 +10,7 @@ import (
 
 // test error status code
 func Test_ErrorStatusCode(t *testing.T) {
-	statsCode := service.ErrorStatusCode(service.ErrorCodeUserNotFound)
+	statsCode := service.ErrorStatusCode(service.ErrorCodeNotFound)
 	assert.Equal(t, statsCode, 404)
 }
 
