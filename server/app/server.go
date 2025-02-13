@@ -9,6 +9,7 @@ import (
 
 	"github.com/charlesfan/hr-go/config"
 	"github.com/charlesfan/hr-go/repository/db/daos"
+	"github.com/charlesfan/hr-go/service"
 )
 
 var server = newServer()
@@ -22,6 +23,7 @@ func (s *Server) Run(c config.Config) error {
 	if err != nil {
 		return err
 	}
+	service.Init(daos.NewDBRepoFactory())
 	s.router = NewRouter(net.JoinHostPort(c.Server.Host, c.Server.Port))
 	s.router.Config(c)
 	s.router.Run()
