@@ -34,7 +34,5 @@ func (a *EmployeeController) Login(c *gin.Context) {
 	}
 
 	token, _, errCode := a.employeeSrv.LoginByEmailPassword(r.Email, r.Password)
-	log.Error(token)
-	log.Error(errCode)
 	resp.WriteResponse(c, errCode, token)
 }
