@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    restart: always
+    networks:
+      - network_1
+    environment:
+      MYSQL_ROOT_PASSWORD: dev123
+      MYSQL_DATABASE: hr_go
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  server:
+    networks:
+      - network_1
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  network_1:

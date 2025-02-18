@@ -58,7 +58,7 @@ func Init() {
 		},
 		Database: &Database{
 			Dialect:  "mysql",
-			Host:     "127.0.0.1",
+			Host:     "db",
 			Port:     "3306",
 			Database: "hr_go",
 			User:     "root",
