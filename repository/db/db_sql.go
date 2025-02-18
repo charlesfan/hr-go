@@ -39,12 +39,11 @@ func (w *sqlDB) New(d string) error {
 		return fmt.Errorf("Database not support: %q", d)
 	}
 
-	initsql(gdb)
 	w.engine.gormDB = gdb
 	return nil
 }
 
-func initsql(gdb *gorm.DB) error {
+func Initsql(gdb *gorm.DB) error {
 	if InitSqlStr != "" {
 		err := gdb.Exec(InitSqlStr).Error
 		if err != nil {

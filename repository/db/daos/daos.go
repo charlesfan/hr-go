@@ -41,6 +41,7 @@ type dbRepoFactory struct {
 func (s *dbRepoFactory) EmployeeRepo() employee.Repository {
 	s.employeeRepository.once.Do(func() {
 		dbEngine.Migration([]interface{}{&employee.Employee{}})
+		db.Initsql(s.gormDB)
 		s.employeeRepository.repo = newEmployeeRepo(s.gormDB)
 	})
 

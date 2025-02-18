@@ -66,7 +66,7 @@ func Init() {
 			Schema:   "user",
 		},
 		Redis: &Redis{
-			Addr:     "localhost:6379",
+			Addr:     "cache:6379",
 			Password: "",
 			DB:       0,
 		},
