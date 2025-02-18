@@ -35,3 +35,10 @@ func Init(c config.Config) {
 		redis: newRedis(ropts),
 	}
 }
+
+func NewRedis() ICache {
+	if item != nil {
+		return item.Redis()
+	}
+	return nil
+}
