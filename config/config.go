@@ -35,6 +35,7 @@ type Config struct {
 	Server   *Server
 	Database *Database
 	Log      *Log
+	Redis    *Redis
 }
 
 func NewConfig() Config {
@@ -63,6 +64,11 @@ func Init() {
 			User:     "root",
 			Password: "dev123",
 			Schema:   "user",
+		},
+		Redis: &Redis{
+			Addr:     "localhost:6379",
+			Password: "",
+			DB:       0,
 		},
 	}
 
