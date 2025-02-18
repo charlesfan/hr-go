@@ -43,7 +43,7 @@ func setupEmployeeTestCaseSuite(t *testing.T) (EmployeeTestCaseSuite, func(t *te
 	a := service.NewAuthenticationService(service.AuthenticationServiceConfig{
 		TokenExpired: time.Hour * 24 * 1, // one week
 		Key:          config.APP_SECRET,
-	})
+	}, fixture.NewCacheMock())
 
 	c := s.env.DBConfig()
 	err := daos.Init(c)

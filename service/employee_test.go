@@ -32,7 +32,7 @@ func setupEmployeeServiceTestCase(t *testing.T) (EmployeeServiceTestCaseSuite, f
 	a := service.NewAuthenticationService(service.AuthenticationServiceConfig{
 		TokenExpired: time.Hour * 24 * 1, // one week
 		Key:          config.APP_SECRET,
-	})
+	}, fixture.NewCacheMock())
 
 	r := dbFactory.EmployeeRepo()
 

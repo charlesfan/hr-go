@@ -1,11 +1,14 @@
 package service
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
+	"github.com/charlesfan/hr-go/repository/cache"
 	"github.com/charlesfan/hr-go/utils/log"
 )
 
@@ -21,6 +24,7 @@ type CustomClaims struct {
 type authenticationService struct {
 	tokenExpired time.Duration
 	key          string
+	cache        cache.ICache
 }
 
 type AuthenticationServiceConfig struct {
@@ -50,6 +54,12 @@ func (s *authenticationService) CreateToken(cfg JwtConfig) (string, int64, int) 
 }
 
 func (s *authenticationService) Verify(tokenStr string) (*CustomClaims, int) {
+	var cc *CustomClaims
+
+	ok, err := s.cache.BindJSON(context.Background(), tokenStr, cc)
+	if ok && err == nil {
+		return cc, ErrorCodeSuccess
+	}
 	// parser token string
 	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -64,7 +74,18 @@ func (s *authenticationService) Verify(tokenStr string) (*CustomClaims, int) {
 	}
 
 	if token.Valid {
-		return token.Claims.(*CustomClaims), ErrorCodeSuccess
+		re := token.Claims.(*CustomClaims)
+		go func(key string, val *CustomClaims) {
+			b, err := json.Marshal(val)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			if err := s.cache.Set(context.Background(), key, string(b), time.Hour*2); err != nil {
+				log.Error(err)
+			}
+		}(tokenStr, re)
+		return re, ErrorCodeSuccess
 	} else if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 			log.Error("AuthenticationService.Verify parse token fail => That's not even a token")
@@ -82,9 +103,10 @@ func (s *authenticationService) Verify(tokenStr string) (*CustomClaims, int) {
 	}
 }
 
-func NewAuthenticationService(cfg AuthenticationServiceConfig) AuthenticationServicer {
+func NewAuthenticationService(cfg AuthenticationServiceConfig, c cache.ICache) AuthenticationServicer {
 	return &authenticationService{
 		tokenExpired: cfg.TokenExpired,
 		key:          cfg.Key,
+		cache:        c,
 	}
 }

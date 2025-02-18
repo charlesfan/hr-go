@@ -9,6 +9,7 @@ import (
 	"github.com/charlesfan/hr-go/config"
 	"github.com/charlesfan/hr-go/service"
 	"github.com/charlesfan/hr-go/test"
+	"github.com/charlesfan/hr-go/test/fixture"
 )
 
 type AuthenticationServiceTestCaseSuite struct {
@@ -24,7 +25,7 @@ func setupAuthenticationServiceTestCase(t *testing.T) (AuthenticationServiceTest
 	s.service = service.NewAuthenticationService(service.AuthenticationServiceConfig{
 		TokenExpired: time.Hour * 24 * 1, // one week
 		Key:          config.APP_SECRET,
-	})
+	}, fixture.NewCacheMock())
 	service.AuthenticationService = s.service
 
 	return s, func(t *testing.T) {
