@@ -15,6 +15,19 @@ services:
       timeout: 20s
       retries: 10
 
+  cache:
+    image: redis:alpine
+    restart: always
+    networks:
+      - network_1
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   server:
     networks:
       - network_1
@@ -23,6 +36,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      cache:
+        condition: service_healthy
       db:
         condition: service_healthy
 
