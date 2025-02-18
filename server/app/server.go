@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"net"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/charlesfan/hr-go/config"
+	"github.com/charlesfan/hr-go/repository/cache"
 	"github.com/charlesfan/hr-go/repository/db/daos"
 	"github.com/charlesfan/hr-go/service"
 )
@@ -19,8 +21,13 @@ type Server struct {
 }
 
 func (s *Server) Run(c config.Config) error {
-	err := daos.Init(c)
+	cache.Init(c)
+	state, err := cache.NewRedis().Ping(context.Background())
 	if err != nil {
+		fmt.Println(fmt.Errorf("cache init error: %+v", err))
+	}
+	fmt.Printf("cache state: %s\n", state)
+	if err := daos.Init(c); err != nil {
 		return err
 	}
 	service.Init(daos.NewDBRepoFactory())
